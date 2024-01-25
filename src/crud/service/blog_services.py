@@ -13,6 +13,11 @@ class BlogService:
     def add(self,data):
         return self.repo.add(item=data)
     
+    def delete(self,index):
+        return self.repo.delete(index=index)
+    def update(self,index,data):
+        return self.repo.update(index=index,change=data)    
+    
     
 
 

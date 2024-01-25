@@ -15,6 +15,23 @@ class InMemoryRep:
     def add(self,item):
         self.repo.append(item)
         return "added successfully"
+    def delete(self,index):
+        return self.repo.pop(index)
+    def update(self,index,change):
+        if 0<=index<len(self.repo):
+            existing=self.repo[index]
+        else:
+            raise HTTPException(status_code=404,detail="blog not found")
+            
+        for key,value in change.items():
+            setattr(existing,key,value)
+        
+        
+        self.repo[index]=existing
+        return "updated successfully"
+        
+        
+    
     
     
 
