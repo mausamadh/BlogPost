@@ -1,6 +1,7 @@
 from fastapi import APIRouter,status
 from src.crud.service.service import service
 from src.crud.model.model import User
+
 crud=APIRouter(prefix="/api/v1/crud",tags=["CRUD"])
 
 
