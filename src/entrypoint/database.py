@@ -1,3 +1,2 @@
-
-user=[]
-blog=[]
+user = []
+blog = []
