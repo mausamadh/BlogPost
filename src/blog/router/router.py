@@ -7,8 +7,8 @@ blog = APIRouter(prefix="/api/v1/blog", tags=["BLOG"])
 
 
 @blog.get("/get", status_code=status.HTTP_200_OK)
-async def blog_get(index: int):
-    return BlogService().get(index=index)
+async def blog_get(blog_id: int):
+    return BlogService().get(blog_id=blog_id)
 
 
 @blog.get("/getall", status_code=status.HTTP_200_OK)
@@ -22,12 +22,12 @@ async def blog_getall(blog: BlogPost):
 
 
 @blog.delete("/delete", status_code=status.HTTP_200_OK)
-async def blog_getall(index: int):
-    return BlogService().delete(index=index)
+async def blog_getall(blog_id: str):
+    return BlogService().delete(blog_id=blog_id)
 
 
 @blog.put("/update", status_code=status.HTTP_200_OK)
-async def blog_getall(index: int, data: UpdateBlogPost):
-    updatePost = data.model_dump(exclude_unset=True)
+async def blog_getall(blog_id: int, data: UpdateBlogPost):
+    # updatePost = data.model_dump(exclude_unset=True)
 
-    return BlogService().update(index=index, data=updatePost)
+    return BlogService().update(blog_id=blog_id, data=data)

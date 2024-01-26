@@ -1,35 +1,46 @@
 from fastapi import HTTPException
-from src.entrypoint.database import blog
+
+# from src.entrypoint.database import blog
+from .blog_repo import BlogRepo
+from src.entrypoint.database import get_db
 
 
 class InMemoryRep:
     def __init__(self):
-        self.repo = blog
+        self.db = get_db()
 
-    def get(self, index):
-        return self.repo[index]
+    def base_query(self):
+        # Base Query for DB calls
+        return self.db.query(BlogRepo)
+
+    def get(self, blog_id):
+        return self.base_query().filter(BlogRepo.id == blog_id).first()
 
     def getall(self):
-        return self.repo
+        return self.base_query().all()
 
     def add(self, item):
-        self.repo.append(item)
-        return "added successfully"
+        item = BlogRepo(**item.__dict__)
+        self.db.add(item)
+        self.db.commit()
+        self.db.refresh(item)
+        return item
 
-    def delete(self, index):
-        return self.repo.pop(index)
+    def delete(self, data):
+        resp = False
+        self.db.delete(data)
+        self.db.commit()
 
-    def update(self, index, change):
-        if 0 <= index < len(self.repo):
-            existing = self.repo[index]
-        else:
-            raise HTTPException(status_code=404, detail="blog not found")
+        quick_check = self.base_query().filter(BlogRepo.title == data.title).first()
+        if not quick_check:
+            resp = True
+        return resp
 
-        for key, value in change.items():
-            setattr(existing, key, value)
-
-        self.repo[index] = existing
-        return "updated successfully"
+    def update(self, data: BlogRepo):
+        updated_data = data
+        self.db.commit()
+        self.db.refresh(updated_data)
+        return updated_data
 
 
 blogRepo = InMemoryRep
